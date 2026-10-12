@@ -99,63 +99,66 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen w-screen overflow-hidden bg-gray-100 font-sans">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-gray-100 font-sans">
       
-      {/* Reference Section */}
-      <div className="flex flex-col w-full h-2/5 lg:h-full lg:w-1/2 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-gray-300 shadow-sm z-10 p-4">
+      {/* Reference Section - Always Top, 1/4 of the height, Row Layout */}
+      <div className="flex flex-row items-center justify-between w-full h-1/4 bg-white border-b-2 border-gray-300 shadow-sm z-10 p-2 sm:p-4 gap-2 sm:gap-4">
         
-        {/* Controls Toolbar */}
-        <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
+        {/* 1. Left Div: Dropdown and Title */}
+        <div className="flex flex-col justify-center items-start gap-2 sm:gap-3 flex-shrink-0 w-1/4 max-w-[200px]">
           <select
             value={compoundType}
             onChange={(e) => setCompoundType(e.target.value)}
-            className="p-2 border rounded font-semibold bg-gray-50 text-gray-700 flex-grow lg:flex-grow-0"
+            className="p-1 sm:p-2 border rounded font-semibold bg-gray-50 text-gray-700 text-xs sm:text-sm w-full outline-none"
           >
-            <option value="linear">1D / Linear Compounds</option>
-            <option value="cyclic">Cyclic Compounds</option>
+            <option value="linear">1D / Linear</option>
+            <option value="cyclic">Cyclic</option>
           </select>
           
-          <div className="flex gap-2 ml-auto">
-            <button
-              onClick={handleSkip}
-              disabled={!currentImage}
-              className="px-4 py-2 bg-amber-400 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50 transition"
-            >
-              Skip
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={!currentImage}
-              className="px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 disabled:opacity-50 transition"
-            >
-              Save & Next
-            </button>
-          </div>
-        </div>
-
-        {/* Large Centered Reference Image */}
-        {currentImage ? (
-          <div className="flex flex-col flex-grow items-center justify-center overflow-hidden">
-            <span className="font-bold text-lg text-gray-600 bg-gray-100 px-4 py-1 rounded mb-3 shadow-sm border border-gray-200">
+          {currentImage && (
+            <span className="font-bold text-xs sm:text-sm text-gray-600 bg-gray-100 px-2 py-1 sm:px-3 sm:py-1.5 rounded shadow-sm border border-gray-200 w-full truncate text-center">
               {currentImage.filename.replace(/\.json$/i, '')}
             </span>
-            <div className="flex-grow flex items-center justify-center w-full h-full overflow-hidden p-2 bg-gray-50 rounded border border-gray-200 shadow-inner">
-              <img
-                src={currentImage.imageUrl}
-                alt="Reference"
-                className="object-contain max-h-full max-w-full drop-shadow-md"
-              />
+          )}
+        </div>
+
+        {/* 2. Center Div: Image (Maximized) */}
+        <div className="flex-grow h-full flex items-center justify-center overflow-hidden p-1 sm:p-2 bg-gray-50 rounded border border-gray-200 shadow-inner">
+          {currentImage ? (
+            <img
+              src={currentImage.imageUrl}
+              alt="Reference"
+              // w-full and h-full force the image to expand to the container's boundaries
+              className="object-contain w-full h-full drop-shadow-md"
+            />
+          ) : (
+            <div className="text-gray-400 font-medium text-sm sm:text-lg">
+              {isLoading ? "Loading..." : "No image available"}
             </div>
-          </div>
-        ) : (
-          <div className="flex flex-grow items-center justify-center text-gray-400 font-medium text-lg">
-            {isLoading ? "Loading..." : "No image available"}
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* 3. Right Div: Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-2 flex-shrink-0">
+          <button
+            onClick={handleSkip}
+            disabled={!currentImage}
+            className="px-3 py-2 sm:px-4 sm:py-2 bg-amber-400 text-black font-bold text-xs sm:text-sm rounded hover:bg-amber-500 disabled:opacity-50 transition whitespace-nowrap"
+          >
+            Skip
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={!currentImage}
+            className="px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white font-bold text-xs sm:text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition whitespace-nowrap"
+          >
+            Save & Next
+          </button>
+        </div>
       </div>
 
-      {/* Excalidraw Canvas Area */}
-      <div className="flex-grow h-3/5 lg:h-full relative">
+      {/* Excalidraw Canvas Area - Always Bottom, 3/4 of the height */}
+      <div className="flex-grow h-3/4 relative">
         {isLoading && (
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/80 backdrop-blur-sm">
             <h2 className="text-xl font-bold animate-pulse text-gray-700">Loading next image...</h2>
